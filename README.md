@@ -84,6 +84,22 @@ Date:     Tue Nov 14 17:13:20 2023 -0500
 Errors are `*commitfmt.ParseError`, which carries the 1-based input line
 number so a caller can point at the exact problem.
 
+## Diffing two commits
+
+`commitfmt.Diff(a, b)` returns a unified diff (`diff -u` style) between
+the canonical byte forms of two parsed commits. It's meant for comparing
+two versions of what is conceptually the same commit — before and after
+a rebase, an amend, a re-sign — not for showing what changed in the
+tree: this package never reads tree or blob objects, so there's no way
+to produce a file-level patch from a `Commit` alone.
+
+```go
+diff := commitfmt.Diff(before, after)
+if diff != "" {
+	fmt.Print(diff)
+}
+```
+
 ## What's not here yet
 
 - no `PARSE_AND_OPEN` convenience for reading straight from `git
